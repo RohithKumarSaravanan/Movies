@@ -22,8 +22,14 @@
 <body class="bg-slate-900 text-slate-300 antialiased">
 
   <!-- FULL-SCREEN LOGIN -->
-  <section id="login-section" class="flex items-center justify-center min-h-screen px-4">
-    <div class="animate-fadeIn bg-slate-800 bg-opacity-70 backdrop-blur-lg p-8 rounded-3xl shadow-2xl max-w-md w-full">
+  <section id="login-section" class="relative flex items-center justify-center min-h-screen px-4 overflow-hidden">
+  <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover z-0">
+    <source src="background.mp4" type="video/mp4" />
+  </video>
+  <div class="absolute inset-0 bg-black bg-opacity-50 z-0"></div>
+
+  <div class="z-10 animate-fadeIn bg-slate-800 bg-opacity-70 backdrop-blur-lg p-8 rounded-3xl shadow-2xl max-w-md w-full">
+   
       <h2 class="text-3xl font-extrabold text-white text-center mb-6">Welcome Back</h2>
       <form id="login-form" class="space-y-6">
         <div>
@@ -114,7 +120,7 @@
             </div>
 
             <div class="movie-card cursor-pointer group" 
-                 data-video-src="https://drive.google.com/file/d/1X-qzGqxcFk7YVr0NvgBDrxNazjqCGfg-/preview"
+                 data-video-src="https://drive.google.com/file/d/1txQqkfXuOdRM73QXnFd37Jpc1AFBvBNj/preview"
                  data-title="Prince and Family (പ്രിൻസ് ആൻഡ് ഫാമിലി)">
               <div class="relative rounded-lg overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-red-500/30">
                 <img src="https://upload.wikimedia.org/wikipedia/en/8/8c/Prince_and_Family_poster.jpg" alt="Anaganaga" class="w-full aspect-[2/3] object-cover">
@@ -135,11 +141,23 @@
           <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-4">🎬 Coming Soon</h2>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
             <!-- Placeholder Coming Soon Card -->
+             <div class="movie-card cursor-pointer group" 
+                 data-video-src="https://www.youtube-nocookie.com/embed/nyURE5vmj2I?si=_yw0VGXlldt6Hapn" 
+                 data-title="Thalaivan Thalaivii">
+              <div class="relative rounded-lg overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-red-500/30">
+                <img src="https://upload.wikimedia.org/wikipedia/en/2/20/Thalaivan_Thalaivii.jpg" alt="Thalaivan Thalaivii" class="w-full aspect-[2/3] object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-3">
+                  <h3 class="text-white font-bold text-sm sm:text-base truncate">Thalaivan Thalaivii</h3>
+                </div>
+              </div>
+            </div>
             <div class="relative rounded-lg overflow-hidden bg-slate-800 border border-slate-700 aspect-[2/3] flex items-center justify-center text-center text-slate-400 text-sm font-semibold">
               More exciting titles coming soon...
             </div>
           </div>
         </div>
+        
       </section>
     </main>
 
