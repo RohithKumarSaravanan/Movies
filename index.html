@@ -1,328 +1,239 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Movie Showcase - Login (Single File)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>My Movie Showcase – Netflix Style</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn { animation: fadeIn 0.8s ease-out; }
 
-    <style>
-        /*
-        ***********************************
-        * CSS STYLES START HERE          *
-        ***********************************
-        */
-
-        /* Basic Resets & Body Styles */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4; /* Light gray background */
-            color: #333;
-            line-height: 1.6;
-        }
-
-        /* Header Styles */
-        header {
-            background-color: #333;
-            color: #fff;
-            padding: 1.5rem 1rem;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        header h1 {
-            margin-bottom: 0.5rem;
-            font-size: 2.5rem;
-        }
-
-        header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-        }
-
-        /* Hidden class for JavaScript control */
-        .hidden {
-            display: none !important; /* Use !important to ensure it overrides flex/block */
-        }
-
-        /* Login Container Styles */
-        .login-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            padding: 2rem;
-            max-width: 400px;
-            margin: 4rem auto; /* Center it on the page with more top margin */
-            text-align: center;
-        }
-
-        .login-container h2 {
-            color: #0056b3;
-            margin-bottom: 1.5rem;
-            font-size: 2rem;
-        }
-
-        .input-group {
-            margin-bottom: 1.2rem;
-            text-align: left;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: bold;
-            color: #555;
-        }
-
-        .input-group input[type="text"],
-        .input-group input[type="password"] {
-            width: calc(100% - 20px); /* Account for padding */
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 1rem;
-            box-sizing: border-box; /* Include padding in width */
-        }
-
-        .login-container button {
-            background-color: #007bff;
-            color: white;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1rem;
-            margin-top: 1rem;
-            transition: background-color 0.3s ease;
-        }
-
-        .login-container button:hover {
-            background-color: #0056b3;
-        }
-
-        .error-message {
-            color: #d9534f; /* Red for error messages */
-            margin-top: 1rem;
-            font-weight: bold;
-        }
-
-        /* Main Content & Gallery Layout */
-        .video-gallery {
-            display: flex; /* Use flexbox for layout */
-            flex-wrap: wrap; /* Allow items to wrap to the next line on small screens */
-            justify-content: center; /* Center videos horizontally */
-            gap: 2rem; /* Space between video containers */
-            padding: 2rem 1rem;
-            max-width: 1200px; /* Max width for the gallery */
-            margin: 2rem auto; /* Center the gallery on the page */
-        }
-
-        /* Individual Video Container Styles */
-        .video-container {
-            background-color: #fff;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            padding: 1.5rem;
-            text-align: center;
-            flex: 1 1 45%; /* Allow containers to grow/shrink, taking about 45% width */
-            min-width: 300px; /* Minimum width before wrapping */
-            max-width: 500px; /* Maximum width for each video container */
-            display: flex; /* Use flexbox for vertical alignment within container */
-            flex-direction: column; /* Stack contents vertically */
-            justify-content: space-between; /* Push title and description to edges, center video */
-        }
-
-        .video-container h2 {
-            color: #0056b3; /* A nice blue for titles */
-            margin-top: 0;
-            margin-bottom: 1rem;
-            font-size: 1.8rem;
-        }
-
-        .video-description {
-            font-size: 0.95rem;
-            color: #555;
-            margin-top: 1rem;
-            line-height: 1.5;
-        }
-
-        /* Responsive Video Embeds (Crucial for aspect ratio) */
-        .video-wrapper {
-            position: relative;
-            width: 100%;
-            /* 16:9 aspect ratio (height / width = 9 / 16 = 0.5625) */
-            padding-bottom: 56.25%; /* Keeps the aspect ratio of the iframe */
-            height: 0;
-            overflow: hidden; /* Hide anything that goes outside */
-            border-radius: 5px; /* Slightly rounded corners for the video area */
-        }
-
-        .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none; /* Remove default iframe border */
-        }
-
-        /* Footer Styles */
-        footer {
-            text-align: center;
-            padding: 1.5rem 1rem;
-            margin-top: 3rem;
-            background-color: #333;
-            color: #fff;
-            font-size: 0.9rem;
-            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
-        }
-
-        /* Media Queries for smaller screens */
-        @media (max-width: 768px) {
-            .video-container {
-                flex: 1 1 100%; /* Stack videos vertically on smaller screens */
-                padding: 1rem;
-            }
-
-            header h1 {
-                font-size: 2rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            header h1 {
-                font-size: 1.8rem;
-            }
-            header p {
-                font-size: 1rem;
-            }
-            .video-gallery {
-                padding: 1rem 0.5rem;
-                gap: 1.5rem;
-            }
-            .video-container {
-                padding: 0.8rem;
-            }
-            .video-container h2 {
-                font-size: 1.5rem;
-            }
-            .video-description {
-                font-size: 0.9rem;
-            }
-        }
-
-        /*
-        ***********************************
-        * CSS STYLES END HERE            *
-        ***********************************
-        */
-    </style>
+    #liquid-title {
+      animation: liquid 3s ease-in-out infinite;
+    }
+  </style>
 </head>
-<body>
+<body class="bg-slate-900 text-slate-300 antialiased">
 
-    <header>
-        <h1>Welcome to My Movie Collection!</h1>
-        <p>Please log in to view the films.</p>
+  <!-- FULL-SCREEN LOGIN -->
+  <section id="login-section" class="flex items-center justify-center min-h-screen px-4">
+    <div class="animate-fadeIn bg-slate-800 bg-opacity-70 backdrop-blur-lg p-8 rounded-3xl shadow-2xl max-w-md w-full">
+      <h2 class="text-3xl font-extrabold text-white text-center mb-6">Welcome Back</h2>
+      <form id="login-form" class="space-y-6">
+        <div>
+          <label for="username" class="block text-sm font-medium text-slate-300 mb-1">Username</label>
+          <input type="text" id="username" name="username" required
+                 class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-red-500 focus:outline-none transition" 
+                 placeholder="your username">
+        </div>
+        <div>
+          <label for="password" class="block text-sm font-medium text-slate-300 mb-1">Password</label>
+          <input type="password" id="password" name="password" required
+                 class="w-full px-4 py-3 rounded-xl bg-slate-900 border border-slate-700 placeholder-slate-500 focus:ring-2 focus:ring-red-500 focus:outline-none transition" 
+                 placeholder="••••••••">
+        </div>
+        <button type="submit"
+                class="w-full py-3 rounded-xl text-lg font-bold bg-gradient-to-r from-red-500 to-red-700 hover:from-red-600 hover:to-red-800 transition transform hover:scale-105">
+          Sign In
+        </button>
+        <p id="error-message" class="text-red-400 text-center text-sm h-6 mt-2"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- APP CONTENT -->
+  <div id="app-content" class="hidden">
+    <header class="bg-slate-900/70 backdrop-blur-sm shadow-lg shadow-black/20 text-center p-6 sticky top-0 z-40">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700 tracking-wider uppercase">
+        My Movie Collection
+      </h1>
     </header>
 
-    <main>
-        <section id="login-section" class="login-container">
-            <h2>Login to Access Movies</h2>
-            <form id="login-form">
-                <div class="input-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" required>
-                </div>
-                <div class="input-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <button type="submit">Login</button>
-                <p id="error-message" class="error-message"></p>
-            </form>
-        </section>
+    <main class="mt-8 mb-20">
+      <section id="video-gallery-section" class="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
 
-        <section id="video-gallery-section" class="video-gallery hidden">
-            <div class="video-container">
-                <h2>Movie Title One</h2>
-                <div class="video-wrapper">
-                    <iframe src="https://drive.google.com/file/d/1_lF6hVmRc7-YxOwBVTi9R6nn3fgEDjBG/preview" width="640" height="480" allow="autoplay" allowfullscreen></iframe>
+        
+
+        <!-- NOW STREAMING SECTION -->
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-4">🎥 Now Streaming</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+
+            <div class="movie-card cursor-pointer group" 
+                 data-video-src="https://drive.google.com/file/d/1AllctHarHJg3-Jktbk8fXILZWjQ6ORBM/preview" 
+                 data-title="3BHK (தமிழ்)">
+              <div class="relative rounded-lg overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-red-500/30">
+                <img src="https://upload.wikimedia.org/wikipedia/en/a/a7/3BHK_poster.jpg" alt="3BHK" class="w-full aspect-[2/3] object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-3">
+                  <h3 class="text-white font-bold text-sm sm:text-base truncate">3BHK (தமிழ்)</h3>
                 </div>
-                <p class="video-description">A thrilling adventure about [brief description of movie 1].</p>
+              </div>
             </div>
 
-            <div class="video-container">
-                <h2>Movie Title Two</h2>
-                <div class="video-wrapper">
-                    <iframe src="https://drive.google.com/file/d/1X-qzGqxcFk7YVr0NvgBDrxNazjqCGfg-/preview" width="640" height="480" allow="autoplay" allowfullscreen></iframe>
+            <div class="movie-card cursor-pointer group" 
+                 data-video-src="https://drive.google.com/file/d/1X-qzGqxcFk7YVr0NvgBDrxNazjqCGfg-/preview"
+                 data-title="Anaganaga (అనగనగ)">
+              <div class="relative rounded-lg overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-red-500/30">
+                <img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Anaganaga_film_poster.jpg" alt="Anaganaga" class="w-full aspect-[2/3] object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-3">
+                  <h3 class="text-white font-bold text-sm sm:text-base truncate">Anaganaga (అనగనగ)</h3>
                 </div>
-                <p class="video-description">A heartwarming story exploring [brief description of movie 2].</p>
+              </div>
             </div>
-        </section>
+
+            <div class="movie-card cursor-pointer group" 
+                 data-video-src="https://www.youtube.com/embed/0Sk0ibrMVaI?si=UN106XqjqGv4SCxn" 
+                 data-title="Mumbai Police (മുംബൈ പോലീസ്)">
+              <div class="relative rounded-lg overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-red-500/30">
+                <img src="https://upload.wikimedia.org/wikipedia/en/3/37/Mumbai_Police_%28film%29.jpg" alt="Mumbai Police (മുംബൈ പോലീസ്)" class="w-full aspect-[2/3] object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-3">
+                  <h3 class="text-white font-bold text-sm sm:text-base truncate">Mumbai Police (മുംബൈ പോലീസ്)</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="movie-card cursor-pointer group" 
+                 data-video-src="https://drive.google.com/file/d/1c2olYCVNsZox-4MOVfQ3v2e9lEaLVMxP/preview"
+                 data-title="Mr & Mrs Bachelor (മിസ്റ്റർ ആൻഡ് മിസ്സിസ് ബാച്ചിലർ)">
+              <div class="relative rounded-lg overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-red-500/30">
+                <img src="https://upload.wikimedia.org/wikipedia/en/1/12/Mr_and_Mrs_Bachelor.jpg" alt="Mr & Mrs Bachelor (മിസ്റ്റർ ആൻഡ് മിസ്സിസ് ബാച്ചിലർ)" class="w-full aspect-[2/3] object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-3">
+                  <h3 class="text-white font-bold text-sm sm:text-base truncate">Mr & Mrs Bachelor (മിസ്റ്റർ ആൻഡ് മിസ്സിസ് ബാച്ചിലർ)</h3>
+                </div>
+              </div>
+            </div>
+
+            <div class="movie-card cursor-pointer group" 
+                 data-video-src="https://drive.google.com/file/d/1X-qzGqxcFk7YVr0NvgBDrxNazjqCGfg-/preview"
+                 data-title="Prince and Family (പ്രിൻസ് ആൻഡ് ഫാമിലി)">
+              <div class="relative rounded-lg overflow-hidden transform transition-transform duration-300 group-hover:scale-105 group-hover:shadow-2xl group-hover:shadow-red-500/30">
+                <img src="https://upload.wikimedia.org/wikipedia/en/8/8c/Prince_and_Family_poster.jpg" alt="Anaganaga" class="w-full aspect-[2/3] object-cover">
+                <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div class="absolute bottom-0 left-0 p-3">
+                  <h3 class="text-white font-bold text-sm sm:text-base truncate">Prince and Family (പ്രിൻസ് ആൻഡ് ഫാമിലി)</h3>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+
+
+	<!-- COMING SOON SECTION -->
+        <div>
+          <h2 class="text-xl md:text-2xl font-bold text-red-400 mb-4">🎬 Coming Soon</h2>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 md:gap-6">
+            <!-- Placeholder Coming Soon Card -->
+            <div class="relative rounded-lg overflow-hidden bg-slate-800 border border-slate-700 aspect-[2/3] flex items-center justify-center text-center text-slate-400 text-sm font-semibold">
+              More exciting titles coming soon...
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
 
-    <footer>
-        <p>&copy; 2025 My Movie Collection. All rights reserved.</p>
+    <footer class="text-center p-6 mt-20 bg-slate-900 border-t border-slate-800">
+      <p class="text-slate-500 text-sm">&copy; 2025 My Movie Collection. All rights reserved.</p>
     </footer>
+  </div>
 
-    <script>
-        /*
-        ***********************************
-        * JAVASCRIPT LOGIC START HERE    *
-        ***********************************
-        */
+  <!-- VIDEO MODAL -->
+  <div id="video-modal" class="hidden fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50 p-4 transition-opacity duration-300">
+    <div class="relative w-full max-w-5xl aspect-video">
+      <button id="close-modal-btn" class="absolute top-4 right-4 z-10
+         bg-white                    rounded-10%
+         p-2
+         hover:bg-gray-100
+         transition-colors
+         text-black                 text-4xl">&times;</button>
+      <iframe id="modal-iframe" src="" frameborder="0" allow="autoplay; fullscreen" allowfullscreen class="rounded-lg shadow-2xl shadow-black w-full h-full"></iframe>
+    </div>
+    <div id="liquid-title-banner" class="hidden fixed bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black via-slate-900/80 to-transparent translate-y-full transition-transform duration-500">
+      <h3 id="liquid-title" class="text-white text-center text-xl md:text-2xl font-bold tracking-wide"></h3>
+    </div>
+  </div>
 
-        // WARNING: This is INSECURE for any sensitive content!
-        // The username and password are hardcoded and visible in the browser's source code.
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const loginForm     = document.getElementById('login-form');
+      const usernameInput = document.getElementById('username');
+      const passwordInput = document.getElementById('password');
+      const errorMessage  = document.getElementById('error-message');
+      const loginSection  = document.getElementById('login-section');
+      const appContent    = document.getElementById('app-content');
+      const movieCards    = document.querySelectorAll('.movie-card');
+      const videoModal    = document.getElementById('video-modal');
+      const modalIframe   = document.getElementById('modal-iframe');
+      const closeModalBtn = document.getElementById('close-modal-btn');
+      const banner        = document.getElementById('liquid-title-banner');
+      const liquidTitle   = document.getElementById('liquid-title');
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const loginForm = document.getElementById('login-form');
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const errorMessage = document.getElementById('error-message');
-            const loginSection = document.getElementById('login-section');
-            const videoGallerySection = document.getElementById('video-gallery-section');
+      const USER = 'vks', PASS = 'vks';
 
-            // Define your (insecure) username and password
-            const correctUsername = 'vks';
-            const correctPassword = 'vks';
+      // Show app if already logged in
+      if (sessionStorage.getItem('loggedIn') === 'true') {
+        loginSection.classList.add('hidden');
+        appContent.classList.remove('hidden');
+      }
 
-            loginForm.addEventListener('submit', (event) => {
-                event.preventDefault(); // Prevent the form from submitting normally and reloading the page
+      // Login handler
+      loginForm.addEventListener('submit', e => {
+        e.preventDefault();
+        if (usernameInput.value === USER && passwordInput.value === PASS) {
+          sessionStorage.setItem('loggedIn', 'true');
+          loginSection.classList.add('hidden');
+          appContent.classList.remove('hidden');
+          errorMessage.textContent = '';
+        } else {
+          errorMessage.textContent = 'Invalid username or password.';
+          passwordInput.value = '';
+          usernameInput.focus();
+        }
+      });
 
-                const enteredUsername = usernameInput.value;
-                const enteredPassword = passwordInput.value;
+      // Open modal + show liquid title
+      movieCards.forEach(card => {
+        card.addEventListener('click', () => {
+          const src   = card.dataset.videoSrc;
+          const title = card.dataset.title;
+          if (!src || src === '#' || !src.startsWith('http')) return;
 
-                if (enteredUsername === correctUsername && enteredPassword === correctPassword) {
-                    // Login successful
-                    errorMessage.textContent = ''; // Clear any previous error messages
-                    loginSection.classList.add('hidden'); // Hide the login form
-                    videoGallerySection.classList.remove('hidden'); // Show the video gallery
-                    
-                    // Optional: Store a flag in session storage so user doesn't have to re-login on refresh (still insecure)
-                    sessionStorage.setItem('loggedIn', 'true');
-                } else {
-                    // Login failed
-                    errorMessage.textContent = 'Invalid username or password. Please try again.';
-                    passwordInput.value = ''; // Clear password field
-                    usernameInput.focus(); // Put focus back on username for easy re-entry
-                }
-            });
-
-            // Check if user was "logged in" from a previous session (e.g., page refresh)
-            // This also highlights the insecurity: simply manipulating sessionStorage can bypass it.
-            if (sessionStorage.getItem('loggedIn') === 'true') {
-                loginSection.classList.add('hidden');
-                videoGallerySection.classList.remove('hidden');
-            }
+          modalIframe.src = src;
+          liquidTitle.textContent = title;
+          videoModal.classList.remove('hidden');
+          banner.classList.remove('translate-y-full', 'hidden');
+          document.body.style.overflow = 'hidden';
         });
+      });
 
-        /*
-        ***********************************
-        * JAVASCRIPT LOGIC END HERE      *
-        ***********************************
-        */
-    </script>
+      // Close modal
+      function closeModal() {
+        banner.classList.add('translate-y-full');
+        videoModal.classList.add('hidden');
+        modalIframe.src = '';
+        document.body.style.overflow = 'auto';
+      }
+      closeModalBtn.addEventListener('click', closeModal);
+      videoModal.addEventListener('click', e => {
+        if (!e.target.closest('.relative')) closeModal();
+      });
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && !videoModal.classList.contains('hidden')) {
+          closeModal();
+        }
+      });
+    });
+  </script>
 </body>
 </html>
